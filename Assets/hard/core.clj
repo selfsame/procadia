@@ -187,7 +187,10 @@
 
 ;The following functions assume gameobject args, I'm big on that but i guess they should also
 ;accept transforms
- 
+
+
+(defn parent [o] (.parent (->transform o)))
+
 (defn parent! [a b]
   (set! (.parent (.transform a)) (.transform b)))
 
