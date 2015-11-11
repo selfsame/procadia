@@ -1,25 +1,47 @@
 fileFormatVersion: 2
-guid: 2fd28cad55f8e5144b004655729c79b6
-timeCreated: 1447100138
+guid: c01fc2cf494fc264b8728eb67308f185
+timeCreated: 1447253291
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Sphere
-    100004: Sphere.001
-    400000: //RootNode
-    400002: Sphere
-    400004: Sphere.001
-    2300000: Sphere
-    2300002: Sphere.001
-    3300000: Sphere
-    3300002: Sphere.001
-    4300000: infihead
-    4300002: Sphere.001
-    4300004: Sphere
+    100000: BASE
+    100002: Bone.L
+    100004: Bone.R
+    100006: eyebrow.L
+    100008: eyebrow.R
+    100010: infihead-armature
+    100012: //RootNode
+    100014: infihead-medium
+    100016: jaw
+    100018: mouth.L
+    100020: mouth.R
+    100022: neck
+    100024: eye
+    100026: eye.001
+    400000: BASE
+    400002: Bone.L
+    400004: Bone.R
+    400006: eyebrow.L
+    400008: eyebrow.R
+    400010: infihead-armature
+    400012: //RootNode
+    400014: infihead-medium
+    400016: jaw
+    400018: mouth.L
+    400020: mouth.R
+    400022: neck
+    400024: eye
+    400026: eye.001
+    2300000: eye
+    2300002: eye.001
+    3300000: eye
+    3300002: eye.001
+    4300000: infihead-medium
+    4300002: eye.001
+    4300004: eye
     9500000: //RootNode
-    13700000: //RootNode
+    13700000: infihead-medium
   materials:
     importMaterials: 1
     materialName: 0
@@ -63,7 +85,7 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
@@ -76,8 +98,10 @@ ModelImporter:
     legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
+    hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

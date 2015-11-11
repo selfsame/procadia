@@ -42,8 +42,8 @@
 (do 
   (clear-cloned!)
   (dorun 
-    (for [z (range 10)
-          y (range 5)
+    (for [z (range 2)
+          y (range 3)
           :let [head (clone! :humans/infihead [(* y -0.5) y z])]]
   
   (let [sm (->skinned head)]
