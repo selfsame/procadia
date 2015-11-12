@@ -18,37 +18,27 @@
 (defn shape-count [o]
   (.blendShapeCount (.sharedMesh (->skinned o))))
 
-(defn make-human [_]
-  (clear-cloned!)
-
-  (dorun 
-    (for [x (range 12)
-          z (range 2)
-          :let [rider (clone! :humans/rider [(- (* x 2) 40) 4 (- (* z 2) 1)])
-                head (child-named rider "infihead")]]
-  
-  (let [sm (->skinned head)]
+(defn make-human []
+  (let [rider (clone! :humans/rider)
+        head (child-named rider "infihead")
+        sm (->skinned head)
+        skin-color (color (rand-vec 1 1 1))]
     (local-scale! head (rand-vec [0.8 1.2] [0.9 1.2] [1 1]))
-    (set! (.color (.material (.GetComponent head UnityEngine.Renderer))) (color (rand-vec 1 1 1)))
+    (mapv #(set! (.color (.material (.GetComponent % UnityEngine.Renderer))) skin-color)
+      [head (child-named rider "body-mesh")
+      (child-named rider "arm-mesh")])
     (dorun (for [i (range (shape-count head))]
       (if true
       (.SetBlendShapeWeight sm (int i) (Mathf/Pow (rand 10) 2)))))
-    (log (mapv #(.GetBlendShapeWeight sm (int %)) (range 17)))))))
+    rider))
 
-
-
-
-(defn draw-track [_]
-  (on-draw-gizmos 
-    [(->v3 -40 0 0)(->v3 -20 0 0)(->v3 0 -5 8) (->v3 20 -10 -10) (->v3 40 -25  17) (->v3 60 -30 -10) (->v3  20 -40 30)(->v3  00 -30 20)]
-    [(->v3 0 1 0)(->v3 0 1 0)(->v3 1 0 0) (->v3 0 1 0) (->v3 -1 0 0) (->v3 0 -1 0) (->v3 1 0 0)(->v3 0 1 1)]))
 
 
 
 
 (comment 
 
-(make-human nil)
+(make-human)
 
 (use 'hard.core)
 (import '[PerlinNoise])
