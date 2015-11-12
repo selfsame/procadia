@@ -12,9 +12,3 @@
 
 (defn nth-srand [col] 
   (get col (srand-int (count col))))
-
-(defcomponent Seedtest [^int seed]
-  (Start [this] 
-    (seed! (.seed this))
-    (UnityEngine.Debug/Log 
-      (str "Seeded: "(srand-int 50)))))
