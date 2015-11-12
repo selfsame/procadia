@@ -24,8 +24,11 @@ sysinfo.txt
 
 # support for shader generation (presumably submodules would also help with this)
 Assets/gamma_tools/
+Assets/gamma_tools.meta
 Assets/gamma/
+Assets/gamma.meta
 Assets/seascape/
+Assets/seascape.meta
 
 # current unfortunate configuration story
 [Aa]ssets/ArcadiaConfig*
