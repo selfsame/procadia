@@ -19,6 +19,10 @@ ModelImporter:
     100022: neck
     100024: eye
     100026: eye.001
+    100028: eyelids.L
+    100030: eyelids.R
+    100032: bottom-teeth
+    100034: top-teeth
     400000: BASE
     400002: Bone.L
     400004: Bone.R
@@ -33,15 +37,24 @@ ModelImporter:
     400022: neck
     400024: eye
     400026: eye.001
+    400028: eyelids.L
+    400030: eyelids.R
+    400032: bottom-teeth
+    400034: top-teeth
     2300000: eye
     2300002: eye.001
+    2300004: top-teeth
     3300000: eye
     3300002: eye.001
+    3300004: top-teeth
     4300000: infihead-medium
     4300002: eye.001
     4300004: eye
+    4300006: top-teeth
+    4300008: bottom-teeth
     9500000: //RootNode
     13700000: infihead-medium
+    13700002: bottom-teeth
   materials:
     importMaterials: 1
     materialName: 0

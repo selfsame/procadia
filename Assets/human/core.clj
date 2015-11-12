@@ -20,6 +20,7 @@
 
 (defn make-human []
   (let [rider (clone! :humans/stable)
+        ;head-ob (clone! :humans/infihead-medium)
         head (child-named rider "infihead")
         sm (->skinned head)
         skin-color (color (rand-vec 1 1 1))]
@@ -27,6 +28,8 @@
     (mapv #(set! (.color (.material (.GetComponent % UnityEngine.Renderer))) skin-color)
       [head (child-named rider "body-mesh")
       (child-named rider "arm-mesh")])
+   ;(parent! head-ob (child-named rider "head"))
+    ;(position! head-ob [0 0 0])
     (dorun (for [i (range (shape-count head))]
       (if true
       (.SetBlendShapeWeight sm (int i) (Mathf/Pow (rand 10) 2)))))
