@@ -9,7 +9,7 @@
     human.core)
   (:import [UnityEngine Time]))
 
-(def speed 1.0)
+(def speed 0.8)
 
 (def T (atom 0))
 
@@ -24,12 +24,29 @@
   (reset! TRACK [data (vec (repeat n (->v3 0 1 0)))])
   true))
 
+(defn maze [n]
+  (let [p (->v3 0 0 0)
+        data [
+    (reduce 
+      (fn [col prv] 
+        (concat col [(->v3 (v+ (last col)
+          (v*  (rand-nth [
+              [1 0 0][-1 0 0][1 1 0] [1 -1 0] [0 0 1][0 0 -1][0 -1 1]
+              [0 1 1][1 1 1][1 -1 1][1 1 -1][1 1 1]
+              [-1 1 0] [-1 -1 0][-1 1 1][-1 -1 1][-1 1 -1][-1 1 1]
+              [-1 0 1][1 0 1][-1 0 -1][1 0 -1][1 0 0][1 0 0][-1 0 0][0 0 1][0 0 -1]]) 
+            [10 10 10])))]))
+      [p]
+      (range n))
+    (vec (repeat n (->v3 0 1 0)))]]
+    (reset! TRACK data)
+    true))
 
-(defn test-scene []
-  (gen-track 160)
+(defn test-scene [_]
+  (maze 160)
   (clear-cloned!)
-  (clone! :Sphere)
-  (dorun (for [z (range 40)] (position! (make-human) [0 0 (* z 2)])))
+  (mapv #(clone! :Sphere (->v3 % 0 0)) (range 30))
+  (dorun (for [z (range 5)] (position! (make-human)     [0 0 (* z 2)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
@@ -41,14 +58,14 @@
   (swap! T + Time/deltaTime)
   (vec (map-indexed
     (fn [i rider]
-      (let [pos (spline (+ (* @T speed) (* i 0.12)) (first @TRACK))
-            next-pos (spline (+ (* @T speed) (* i 0.12) 0.12)  (first @TRACK))]
+      (let [pos (spline (+ (* @T speed) (* i 0.2)) (first @TRACK))
+            next-pos (spline (+ (* @T speed) (* i 0.2) 0.2)  (first @TRACK))]
         (position! rider pos)
         (look-at! (->transform rider) next-pos))) 
-    (arcadia.core/objects-named "rider") )))
+    (arcadia.core/objects-named "Sphere") )))
 
 (defn draw-gizmos [_]
   (apply on-draw-gizmos (mapv #(take 12 (drop (int (* @T speed)) %)) @TRACK)))
 
 
-;(test-scene)
+(test-scene nil)
