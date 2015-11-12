@@ -19,11 +19,11 @@
   (.blendShapeCount (.sharedMesh (->skinned o))))
 
 (defn make-human []
-  (let [rider (clone! :humans/rider)
+  (let [rider (clone! :humans/stable)
         head (child-named rider "infihead")
         sm (->skinned head)
         skin-color (color (rand-vec 1 1 1))]
-    (local-scale! head (rand-vec [0.8 1.2] [0.9 1.2] [1 1]))
+    ;(local-scale! head (rand-vec [0.8 1.2] [0.9 1.2] [1 1]))
     (mapv #(set! (.color (.material (.GetComponent % UnityEngine.Renderer))) skin-color)
       [head (child-named rider "body-mesh")
       (child-named rider "arm-mesh")])
