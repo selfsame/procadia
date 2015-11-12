@@ -63,8 +63,6 @@
 					(mapv reveal-bones nexts)))))
 
 (defn form-colliders [o]
-
-   
   (let [nex (->bone o)
         prv (parent o)
         offset (float (if (->bone prv) (.length (->bone prv)) 0))]
@@ -84,8 +82,7 @@
           }]
         })
       
-      
-    (map form-colliders 
+    (mapv form-colliders 
       (filter ->bone (children nex)))))
 
 
