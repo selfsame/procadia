@@ -10,7 +10,7 @@
   (:import [UnityEngine Time]))
 
 (def speed 0.8)
-(def interval 0.1)
+(def interval 0.2)
 
 (def T (atom 0))
 
@@ -47,7 +47,7 @@
   (gen-track 300)
   (clear-cloned!)
   ;(mapv #(clone! :Sphere (->v3 % 0 0)) (range 30))
-  (dorun (for [z (range 40)] (position! (make-human)     [0 0 (* z 2)])))
+  (dorun (for [z (range 10)] (position! (make-kart)     [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
@@ -63,7 +63,7 @@
             next-pos (spline (+ (* @T speed) (* i interval) interval)  (first @TRACK))]
         (position! rider pos)
         (look-at! (->transform rider) next-pos))) 
-    (arcadia.core/objects-named "stable") ))
+    (arcadia.core/objects-named "kartainer2") )) 
   
   (look-at! (->transform (the Camera)) (the stable)))
 
