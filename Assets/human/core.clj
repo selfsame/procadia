@@ -18,9 +18,8 @@
 (defn shape-count [o]
   (.blendShapeCount (.sharedMesh (->skinned o))))
 
-(defn make-human []
-  (let [rider (clone! :humans/stable)
-        ;head-ob (clone! :humans/infihead-medium)
+(defn color-human! [rider]
+  (let [;head-ob (clone! :humans/infihead-medium)
         head (child-named rider "infihead")
         sm (->skinned head)
         skin-color (color (rand-vec 1 1 1))]
@@ -37,10 +36,8 @@
 (defn make-kart []
   (let [kart (clone! :humans/kartainer2)
         riders (child-named kart "veryman" "veryman (1)")]
-    (doseq [rider riders] (make-human! rider))
+    (doseq [rider riders] (color-human! rider))
     kart))
-
-
 
 (comment 
 
