@@ -6,13 +6,16 @@
 (defn vertices [gob] 
   (.vertices (.sharedMesh (.GetComponent gob "MeshFilter"))))
 
-(defn color! [gob col]
+(defn vertex-color! [gob col]
   (when (gameobject? gob)
     (when-let [meshfilter (.GetComponent gob "MeshFilter")]
-      (let [mesh (if (-editor?) (.mesh meshfilter) (.mesh meshfilter))
+      (let [mesh (if (-editor?) (.sharedMesh meshfilter) (.sharedMesh meshfilter))
           verts (.vertices mesh)
           colors (into-array (take (count verts) (repeat col)))]
         (set! (.colors mesh) colors) nil))))
+
+(defn material-color! [o c]
+  (set! (.color (.material (.GetComponent o UnityEngine.Renderer))) c))
 
 (defn vertex-colors! [gob c]
   (when (gameobject? gob)
