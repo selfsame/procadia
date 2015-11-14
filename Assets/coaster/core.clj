@@ -20,36 +20,25 @@
 
 (def TRACK (atom [[] []]))
 
+
+
 (defn gen-track [n]
   (let [data
     (vec (for [i (range 500 (+ n 500))
-        :let [j (- 120 (* 50 (Mathf/Sin (* i 0.2))))
+        :let [
+              j (- 150 (* 50 (Mathf/Sin (* i 0.2))))
               x (if (< i 100) 
                   (* j (Mathf/Cos (* i 0.1)) )
-                  (* j (Mathf/Cos (* i 0.1)) ))]]
-    (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
+                  (* j (Mathf/Cos (* i 0.1)) ))
+    res (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
           (+ i (* j (Mathf/Sin (* i 0.13))))
-          )))]
+          )]]
+    (V+ res (->v3 0 (+ (* (+ (Mathf/Abs (Z res)) (Mathf/Abs (X res))) 0.3 )
+                       (* (noise :terrain (V* res 0.003)) (+ 200 ))) 0))))]
   (reset! TRACK [data (vec (repeatedly n #(->v3 [0 1 0])))])
   true))
 
-(defn maze [n]
-  (let [p (->v3 0 6 0)
-        data [
-    (reduce 
-      (fn [col prv] 
-        (concat col [(->v3 (v+ (last col)
-          (v*  (rand-nth [
-              [1 0 0][-1 0 0][1 1 0] [1 -1 0] [0 0 1][0 0 -1][0 -1 1]
-              [0 1 1][1 1 1][1 -1 1][1 1 -1][1 1 1]
-              [-1 1 0] [-1 -1 0][-1 1 1][-1 -1 1][-1 1 -1][-1 1 1]
-              [-1 0 1][1 0 1][-1 0 -1][1 0 -1][1 0 0][1 0 0][-1 0 0][0 0 1][0 0 -1]]) 
-            [40 20 40])))]))
-      [p]
-      (range n))
-    (vec (repeat n (->v3 0 1 0)))]]
-    (reset! TRACK data)
-    true))
+
 
 (defn make-kart []
   (let [kart (clone! :cart)]
@@ -64,29 +53,33 @@
 
 
 (defn gen-scaffold []
-  (let [interval 0.6
-        len 80
+  (let [interval 0.4
+        len 400
         points 
-        (for [i (range len)]
-          (spline (* i interval) (first @TRACK)))]
+        (for [i (range 4 len)]
+          (spline (* i interval) (first @TRACK)))
+        ]
       (reduce 
         (fn [a b] 
+
           (let [lowest (if (< (Y a) (Y b)) a b)
                 rot (look-quat [(X b) 0 (Z b)][(X a) 0 (Z a)])
                 dist (Vector3/Distance (->v3 (X a) 0 (Z a)) (->v3 (X b) 0 (Z b)))
 
                 ]
-            (doseq [i (take 16 (range (int (/ (Y lowest) dist))))]
-              (let [o (clone! (get {0 :girder} i :girder2) (v- [(X a)(Y lowest)(Z a)] [0 (* i dist) 0]))]
-                (local-scale! o (->v3 (/ dist 10) (/ dist 10) (/ dist 10)))
-                (set!(.rotation (.transform o)) rot)))
+
+            (doseq [i (take (inc (srand 5)) (range (int (/ (Y lowest) dist))))]
+              (let [target (v- [(X a)(Y lowest)(Z a)] [0 (* i dist) 0])]
+                (when (or (= i 0) (< 0 (noise :scaffold (->v3 (v* target 0.01)))))
+                  (let [o (clone! (get {0 :girder} i :girder2) target)]
+                    (local-scale! o (->v3 (/ dist 10) (/ dist 10) (/ dist 10)))
+                    (set!(.rotation (.transform o)) rot)))))
             b))
-        points)
-    ))
+        points)))
  
 (defn test-scene [_]
-  (gen-track 600)
-  (dorun (for [z (range 10)] (position! (make-kart) [0 0 (* z 5)])))
+  (gen-track 3000)
+  (dorun (for [z (range 20)] (position! (make-kart) [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
@@ -116,7 +109,7 @@
 
 (clear-cloned!)
 (clone! :Camera)
-(generate-world)
+(generate-world 'joseph)
 (test-scene nil)
 (gen-scaffold)
 (let [seat (first (shuffle (arcadia.core/objects-named "head")))]
