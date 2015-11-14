@@ -1,0 +1,98 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      2616,         89]
+NotebookOptionsPosition[      2030,         65]
+NotebookOutlinePosition[      2391,         81]
+CellTagsIndexPosition[      2348,         78]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["READ", "Title"]], "Subsection",
+ CellChangeTimes->{{3.656440936688675*^9, 3.656440937359502*^9}}],
+
+Cell["I just want to read a fucking string you facists", "Text",
+ CellChangeTimes->{{3.656440988958576*^9, 3.6564410036585712`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"BeginPackage", "[", "\"\<Read`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.6564409414606*^9, 3.656440950759474*^9}}],
+
+Cell[BoxData[
+ RowBox[{"read", ";"}]], "Input",
+ CellChangeTimes->{{3.656440938966934*^9, 3.6564409543190737`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Begin", "[", "\"\<`Private`\>\"", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.656440957831065*^9, 3.656440966774893*^9}}],
+
+Cell[BoxData[
+ RowBox[{"ClearAll", "[", "read", "]"}]], "Input",
+ CellChangeTimes->{{3.6564411604344587`*^9, 3.6564411621894827`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"read", "[", "s_String", "]"}], ":=", 
+  RowBox[{"ReadString", "[", 
+   RowBox[{"StringToStream", "[", "s", "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.656440973941071*^9, 3.656440977358424*^9}, {
+  3.65644101174966*^9, 3.656441027621427*^9}, {3.656441151954618*^9, 
+  3.656441156682743*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.656440967976227*^9, 3.656440969216316*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.656440970266652*^9, 3.6564409720400953`*^9}}]
+}, Open  ]]
+},
+WindowSize->{960, 1151},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
+2015)",
+StyleDefinitions->"menloExperiment.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 121, 1, 72, "Subsection"],
+Cell[704, 25, 132, 1, 30, "Text"],
+Cell[839, 28, 141, 2, 33, "Input"],
+Cell[983, 32, 115, 2, 30, "Input"],
+Cell[1101, 36, 158, 3, 33, "Input"],
+Cell[1262, 41, 134, 2, 30, "Input"],
+Cell[1399, 45, 330, 7, 31, "Input"],
+Cell[1732, 54, 135, 3, 30, "Input"],
+Cell[1870, 59, 144, 3, 31, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
