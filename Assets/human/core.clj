@@ -91,8 +91,8 @@
         (position! o (if (odd? z) (v+ target [0.5 0 0]) target))
         (sel! o))))
 
-  (mapv (comp #(force! % 0 -6000 1000 ) ->rigidbody) 
-      (arcadia.core/objects-named "hand.L"))))
+  (mapv (comp #(force! % 0 -300 300 ) ->rigidbody) 
+      (arcadia.core/objects-named "hand.R"))))
 
 
 

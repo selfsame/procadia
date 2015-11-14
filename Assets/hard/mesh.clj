@@ -9,7 +9,7 @@
 (defn vertex-color! [gob col]
   (when (gameobject? gob)
     (when-let [meshfilter (.GetComponent gob "MeshFilter")]
-      (let [mesh (if (-editor?) (.mesh meshfilter) (.mesh meshfilter))
+      (let [mesh (if (-editor?) (.sharedMesh meshfilter) (.sharedMesh meshfilter))
           verts (.vertices mesh)
           colors (into-array (take (count verts) (repeat col)))]
         (set! (.colors mesh) colors) nil))))
