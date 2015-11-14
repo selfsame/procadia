@@ -10,5 +10,5 @@
 (defn srand-int [n] 
   (int (* (srand) n)))
 
-(defn nth-srand [col] 
+(defn srand-nth [col] 
   (get col (srand-int (count col))))

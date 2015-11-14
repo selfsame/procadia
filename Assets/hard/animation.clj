@@ -38,12 +38,12 @@
 		  (! this length (.magnitude (V- (->v3 nex) (->v3 this))))))
 	(OnDrawGizmos [this] 
 		(gizmo-color (color 1 0 1))
-		(gizmo-point (->v3 this) 0.1)
+		(gizmo-point (->v3 this) 0.01)
 		(gizmo-line  (->v3 this) (transform-point 
       (->transform (->go this)) (->v3 (- (.length this)) 0 0) )))
 	(OnDrawGizmosSelected [this] 
 		(gizmo-color (color 0 1 1))
-		(gizmo-point (->v3 this) 0.12)
+		(gizmo-point (->v3 this) 0.012)
 		(gizmo-line (->v3 this) (transform-point 
       (->transform (->go this)) (->v3 (- (.length this)) 0 0) ))))
 
@@ -55,7 +55,7 @@
 			  bone (do (destroy! (->bone gob )) 
                  (.AddComponent gob hard.animation.Bone))
 			  lens (map #(* 1 (.magnitude (V- (->v3 %) (->v3 o)))) nexts)
-			  res (cond (empty? lens) 0.5
+			  res (cond (empty? lens) 0.05
 			  	(= 1 (count lens)) (first lens)
 			  	:else (/ (apply + lens) (count lens)))]
 			  	(do
