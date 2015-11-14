@@ -2,6 +2,7 @@
   (:use 
     arcadia.core 
     arcadia.hydrate
+    seed.core
     hard.core
     hard.animation
     hard.edit
@@ -9,8 +10,8 @@
     human.core)
   (:import [UnityEngine Time]))
 
-(def speed 0.8)
-(def interval 0.2)
+(def speed 1.1)
+(def interval 0.25)
 
 (def T (atom 0))
 
@@ -22,7 +23,7 @@
         :let [x (* i 10)
               y (* 2 (if (odd? i) (Mathf/Cos (- i)) (Mathf/Cos  i)))]]
     (->v3 x (* y 9) (* (Mathf/Sin (- y x)) 5))))]
-  (reset! TRACK [data (vec (repeat n (->v3 0 1 0)))])
+  (reset! TRACK [data (vec (repeatedly n #(->v3 [0 1 0])))])
   true))
 
 (defn maze [n]
@@ -36,18 +37,32 @@
               [0 1 1][1 1 1][1 -1 1][1 1 -1][1 1 1]
               [-1 1 0] [-1 -1 0][-1 1 1][-1 -1 1][-1 1 -1][-1 1 1]
               [-1 0 1][1 0 1][-1 0 -1][1 0 -1][1 0 0][1 0 0][-1 0 0][0 0 1][0 0 -1]]) 
-            [10 10 10])))]))
+            [20 10 20])))]))
       [p]
       (range n))
     (vec (repeat n (->v3 0 1 0)))]]
     (reset! TRACK data)
     true))
 
+(defn make-kart []
+  (let [kart (clone! :cart)]
+    (mapv 
+      (fn [x]
+        (let [rider (make-human)]
+          (position! rider [x 0 -0.31])
+          (rotate! rider [0 180 0])
+          (parent! rider kart))) 
+      [0.5 -0.5]
+      )
+    kart))
+
+
+
+
 (defn test-scene [_]
-  (gen-track 300)
+  (gen-track 1000)
   (clear-cloned!)
-  ;(mapv #(clone! :Sphere (->v3 % 0 0)) (range 30))
-  (dorun (for [z (range 10)] (position! (make-kart)     [0 0 (* z 5)])))
+  (dorun (for [z (range 20)] (position! (make-kart) [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
@@ -63,7 +78,7 @@
             next-pos (spline (+ (* @T speed) (* i interval) interval)  (first @TRACK))]
         (position! rider pos)
         (look-at! (->transform rider) next-pos))) 
-    (arcadia.core/objects-named "kartainer2") )) 
+    (arcadia.core/objects-named "cart") )) 
   
   (look-at! (->transform (the Camera)) (the stable)))
 
@@ -72,3 +87,8 @@
 
 
 (test-scene nil)
+
+
+
+;(sel! (first (shuffle  
+;      (arcadia.core/objects-named "head"))))
