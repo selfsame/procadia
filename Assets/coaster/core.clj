@@ -93,9 +93,9 @@
                 rot (look-quat [(X b) 0 (Z b)][(X a) 0 (Z a)])
                 dist (Vector3/Distance (->v3 (X a) 0 (Z a)) (->v3 (X b) 0 (Z b)))]
 
-            (doseq [i (take (+ 2 (srand 6)) (range (int (/ (Y lowest) dist))))]
+            (doseq [i (take (+ 3 (srand 12)) (range (int (/ (Y lowest) dist))))]
               (let [target (v- [(X a)(Y lowest)(Z a)] [0 (* i dist) 0])]
-                (when (or (= i 0) (< 0 (noise :scaffold (->v3 (v* target 0.01)))))
+                (when (or (= i 0) (< -0.95 (noise :scaffold (->v3 (v* target 0.01)))))
                   (let [o (clone! (get {0 :girder} i :girder2) target)]
                     (local-scale! o (->v3 (/ dist 10) (/ dist 10) (/ dist 10)))
                     (set! (.rotation (.transform o)) rot)
@@ -141,7 +141,7 @@
 (defn setup-game []
   (clear-cloned!)
   (clone! :Camera)
-  (generate-world 'joseph)
+  (generate-world (rand))
   (grow-track! 100)
   (make-train nil)
 
@@ -157,20 +157,3 @@
   (if (zero? (mod Time/frameCount track-grow-rate))
     (grow-track! track-grow-size)))
  
-(do 
-(set! (.name (clone! :Sphere)) "Terrain")
-(dorun (for [x (range -5 5) z (range -5 5)]
-  (let [tile (clone! :tile (v* [x 0 z] 100))]
-
-(parent! tile (the Terrain))
-(map-mesh-set! tile 
-  (fn [i v] 
-    (->v3 (X v) 
-          (* (noise :terrain (V* (V+ v 
-            (->v3 (v* [x 0 z] 10)))
-             0.1)) 70) 
-          (Z v))))
-(gradiate tile)
-))) 
-(local-scale! (the Terrain) [5 1 5])
-true)
