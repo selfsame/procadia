@@ -141,7 +141,7 @@
 (defn setup-game []
   (clear-cloned!)
   (clone! :Camera)
-  (generate-world 'joseph)
+  (generate-world (rand))
   (grow-track! 100)
   (make-train nil)
 
