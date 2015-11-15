@@ -233,6 +233,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1995342197}
   - 114: {fileID: 1995342198}
+  - 114: {fileID: 1995342199}
   m_Layer: 0
   m_Name: rockscene
   m_TagString: Untagged
@@ -269,6 +270,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   namespaceName: coaster.core
   varName: test-scene
+  _serialized_data: 
+--- !u!114 &1995342199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1995342196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -683280277, guid: 18c0e9797d0f44e49b053ce42136b990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  namespaceName: coaster.core
+  varName: track-grower
   _serialized_data: 
 --- !u!1 &2114586857
 GameObject:
@@ -319,7 +334,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
-  m_StereoMirrorMode: 0
 --- !u!4 &2114586859
 Transform:
   m_ObjectHideFlags: 0
