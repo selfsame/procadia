@@ -13,6 +13,9 @@
     coaster.world)
   (:import [UnityEngine Time]))
 
+(def track-grow-rate 100) ;; grow track every n frames
+(def track-grow-size 100) ;; add n nodes every track growth
+
 (def speed 1.5)
 
 (def interval 0.16)
@@ -24,6 +27,16 @@
 (def track-positions (atom []))
 (def track-normals (atom []))
 
+(defn next-track-point [i]
+  (let [j (- 150 (* 50 (Mathf/Sin (* i 0.2))))
+        x (if (< i 100) 
+            (* j (Mathf/Cos (* i 0.1)) )
+            (* j (Mathf/Cos (* i 0.1)) ))
+        res (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
+                  (+ i (* j (Mathf/Sin (* i 0.13))))
+                  )]
+    (V+ res (->v3 0 (+ (* (+ (Mathf/Abs (Z res)) (Mathf/Abs (X res))) 0.3 )
+                       (* (noise :terrain (V* res 0.003)) (+ 200 ))) 0))))
 (defn gen-track [n]
   (let [data
     (vec (for [i (range 1 (+ n 1))
@@ -65,14 +78,13 @@
       [0.5 -0.5])
     kart))
 
-
-(defn gen-scaffold []
+(defn gen-scaffold [positions]
   (let [holder (clone! :Sphere)
         interval 0.5
-        len 200
+        len (count positions)
         points 
         (for [i (range 4 len)]
-          (spline (* i interval) @track-positions))]
+          (spline (* i interval) positions))]
         (set! (.name holder) "scaffold")
       (reduce 
         (fn [a b] 
@@ -119,12 +131,18 @@
     (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) (->v3 0))) @track-positions))))
 
 
+(defn grow-track! [n]
+  (let [old-size (count @track-positions)]
+    (dotimes [i n]
+      (swap! track-positions conj (next-track-point (+ old-size i)))
+      (swap! track-normals conj (->v3 [0 1 0])))
+    (gen-scaffold (take n (drop old-size @track-positions)))))
+
 (defn setup-game []
   (clear-cloned!)
   (clone! :Camera)
   (generate-world 'joseph)
-  (gen-track 1000)
-  (gen-scaffold)
+  (grow-track! 100)
   (make-train nil)
 
   (let [seat (last (shuffle (arcadia.core/objects-named "head")))]
@@ -135,9 +153,9 @@
 
 (setup-game)
 
-
-
-
+(defn track-grower [go]
+  (if (zero? (mod Time/frameCount track-grow-rate))
+    (grow-track! track-grow-size)))
  
 (do 
 (set! (.name (clone! :Sphere)) "Terrain")
