@@ -13,6 +13,9 @@
 
 (def PN (atom {}))
 
+(def FREE-TILES (atom []))
+(def USED-TILES (atom {}))
+
 (defn noise 
   ([k v] (cond (vector3? v) (noise k (.x v) (.y v) (.z v))
                (number? v) (noise k v 0.0 0.0)))
@@ -52,21 +55,47 @@
     (generate-world))
   ([]
     (reset! PN {:terrain (PerlinNoise. (srand))}) 
-    (let []
+    (let [terrain (clone! :Terrain)
+          tiles (mapv #(parent! (clone! :tile [0 (+ -99999 %) 0]) terrain) (range 100))]
       (local-scale! (generate-skydome) (->v3 90000 90000 90000))
-
+      
       )))
+
+
+(defn draw-terrain [point]
+  (let [tiles (children (the Terrain))
+        outer (remove #(< (Vector3/Distance (->v3 %) point) 4000.0) tiles)
+    ]
+    (mapv #(position! % [0 -10000 0]) outer)))
+
+
+
+
+
 
 
 
 (comment 
 
-(clear-cloned!)
-(for [x (range 10 20) z (range 10 20)]
 
-  (let [w (- (noise :rocks (V* (->v3 x 0.0 z) 0.08)))
-        o (clone! (srand-nth [:env/mineral01 :env/mineral02 :env/mineral03 :env/mineral04])
-            (v* [(* x 10) (* w 300) (* z 10)] 10))]
-        (local-scale! o (->v3  (+ 2 w) (* (srand 10) w ) (+ 2 w)))
-        (rotate! o (->v3 (srand 20)  (srand 20) (srand 260)))
-        )))
+(do (clear-cloned!)
+(generate-world))
+
+(draw-terrain (->v3 0 0 0))
+
+
+
+(map-mesh-set! tile 
+  (fn [i v] 
+    (->v3 (X v) 
+          (* (noise :terrain (V* (V+ v 
+            (->v3 (v* [x 0 z] 10)))
+             0.1)) 70) 
+          (Z v))))
+
+
+
+
+
+
+  )

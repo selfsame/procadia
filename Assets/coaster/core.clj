@@ -20,7 +20,7 @@
 (def T (atom 0))
 
 (def TRACK (atom [[] []]))
-
+ 
 
 
 (defn gen-track [n]
@@ -66,7 +66,7 @@
 (defn gen-scaffold []
   (let [holder (clone! :Sphere)
         interval 0.5
-        len 200
+        len 400
         points 
         (for [i (range 4 len)]
           (spline (* i interval) (first @TRACK)))]
@@ -78,9 +78,9 @@
                 rot (look-quat [(X b) 0 (Z b)][(X a) 0 (Z a)])
                 dist (Vector3/Distance (->v3 (X a) 0 (Z a)) (->v3 (X b) 0 (Z b)))]
 
-            (doseq [i (take (+ 2 (srand 6)) (range (int (/ (Y lowest) dist))))]
+            (doseq [i (take (+ 3 (srand 12)) (range (int (/ (Y lowest) dist))))]
               (let [target (v- [(X a)(Y lowest)(Z a)] [0 (* i dist) 0])]
-                (when (or (= i 0) (< 0 (noise :scaffold (->v3 (v* target 0.01)))))
+                (when (or (= i 0) (< -0.95 (noise :scaffold (->v3 (v* target 0.01)))))
                   (let [o (clone! (get {0 :girder} i :girder2) target)]
                     (local-scale! o (->v3 (/ dist 10) (/ dist 10) (/ dist 10)))
                     (set! (.rotation (.transform o)) rot)
@@ -111,15 +111,15 @@
   (look-at! (->transform (the Camera)) (->v3 (the cart))))
 
 (defn draw-gizmos [_]
-  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @TRACK))
+  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @TRACK)))
   (set! Gizmos/color (color 1 0 1))
-    (dorun (map-indexed #(Gizmos/DrawLine %2 (get (first @TRACK) (inc %1) (->v3 0))) (first @TRACK)))))
+    (dorun (map-indexed #(Gizmos/DrawLine %2 (get (first @TRACK) (inc %1) (->v3 0))) (first @TRACK))))
 
 
 (defn setup-game []
   (clear-cloned!)
   (clone! :Camera)
-  (generate-world 'joseph)
+  (generate-world (rand))
   (gen-track 1000)
   (gen-scaffold)
   (make-train nil)
@@ -136,20 +136,3 @@
 
 
  
-(do 
-(set! (.name (clone! :Sphere)) "Terrain")
-(dorun (for [x (range -5 5) z (range -5 5)]
-  (let [tile (clone! :tile (v* [x 0 z] 100))]
-
-(parent! tile (the Terrain))
-(map-mesh-set! tile 
-  (fn [i v] 
-    (->v3 (X v) 
-          (* (noise :terrain (V* (V+ v 
-            (->v3 (v* [x 0 z] 10)))
-             0.1)) 70) 
-          (Z v))))
-(gradiate tile)
-))) 
-(local-scale! (the Terrain) [5 1 5])
-true)
