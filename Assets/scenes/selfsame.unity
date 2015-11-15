@@ -65,7 +65,6 @@ LightmapSettings:
     m_TextureCompression: 1
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
-    m_ReflectionCompression: 2
   m_LightmapSnapshot: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
@@ -85,6 +84,9 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!127 &5
+LevelGameManager:
+  m_ObjectHideFlags: 0
 --- !u!1 &309442253
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +116,7 @@ Transform:
   m_LocalScale: {x: 18189.3105, y: 18189.2832, z: 18189.2832}
   m_Children: []
   m_Father: {fileID: 1995342197}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!23 &309442255
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -188,7 +190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1995342197}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!108 &1232364997
 Light:
   m_ObjectHideFlags: 0
@@ -222,48 +224,6 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
---- !u!1 &1979521050
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1979521051}
-  - 114: {fileID: 1979521052}
-  m_Layer: 0
-  m_Name: Puker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1979521051
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1979521050}
-  m_LocalRotation: {x: -.040526621, y: -.918684304, z: .380531549, w: -.0978397503}
-  m_LocalPosition: {x: -53, y: -36.9999809, z: 97}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1995342197}
-  m_RootOrder: 0
---- !u!114 &1979521052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1979521050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -683280277, guid: 18c0e9797d0f44e49b053ce42136b990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  namespaceName: spice.core
-  varName: update!
-  _serialized_data: 
 --- !u!1 &1995342196
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,11 +232,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1995342197}
-<<<<<<< variant A
   - 114: {fileID: 1995342198}
   - 114: {fileID: 1995342199}
->>>>>>> variant B
-======= end
   m_Layer: 0
   m_Name: rockscene
   m_TagString: Untagged
@@ -294,13 +251,11 @@ Transform:
   m_LocalPosition: {x: -3.02200007, y: 387, z: 21.2789993}
   m_LocalScale: {x: .703967392, y: .703966618, z: .703966618}
   m_Children:
-  - {fileID: 1979521051}
   - {fileID: 1232364996}
   - {fileID: 2114586859}
   - {fileID: 309442254}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-<<<<<<< variant A
 --- !u!114 &1995342198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,8 +285,6 @@ MonoBehaviour:
   namespaceName: coaster.core
   varName: track-grower
   _serialized_data: 
->>>>>>> variant B
-======= end
 --- !u!1 &2114586857
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +330,6 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -393,4 +345,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1995342197}
-  m_RootOrder: 2
+  m_RootOrder: 1
