@@ -9,7 +9,7 @@
       hard.mesh
       math.spline
       seed.core)
-    (:import [UnityEngine Time Color ]))
+    (:import [UnityEngine Time Color ])) 
 
 (def PN (atom {}))
 
@@ -42,7 +42,7 @@
               (cos (* x m2)))
             (cos (* z m1)))))
       o))
-
+ 
 (defn generate-skydome
   ([seed]
     (seed! seed)

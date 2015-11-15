@@ -1,6 +1,6 @@
 (ns coaster.core
-  (:use 
-    arcadia.core 
+  (:use
+    arcadia.core
     arcadia.hydrate
     seed.core
     hard.core
@@ -11,9 +11,8 @@
     math.spline
     human.core
     coaster.world)
-  (:import [UnityEngine Time])
-  (:require [spice.core :refer [start-quease!]])
-  (:import [UnityEngine Time Debug]))
+  (:import [UnityEngine Time Debug])
+  (:require [spice.core :refer [start-quease!]]))
 
 (def track-grow-rate 30) ;; grow track every n frames
 (def track-grow-size 100) ;; add n nodes every track growth
@@ -46,10 +45,10 @@
     (vec (for [i (range 1 (+ n 1))
         :let [
               j (- 150 (* 50 (Mathf/Sin (* i 0.2))))
-              x (if (< i 100) 
+              x (if (< i 100)
                   (* j (Mathf/Cos (* i 0.1)) )
                   (* j (Mathf/Cos (* i 0.1)) ))
-    res (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
+    res (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) ))
           (+ i (* j (Mathf/Sin (* i 0.13))))
           )]]
     (V+ res (->v3 0 (+ (* (+ (Mathf/Abs (Z res)) (Mathf/Abs (X res))) 0.3 )
@@ -60,7 +59,7 @@
 
 (defn gridder [n]
   (let [data
-    (vec (for [x (range n) 
+    (vec (for [x (range n)
                z (range n)]
       (->v3 x (* (noise :terrain (* x 0.04) 0.0 (* z 0.04))  20) z)))]
   (reset! track-positions data)
@@ -69,14 +68,14 @@
 
 (defn make-kart []
   (let [kart (clone! :cart)]
-    (mapv 
+    (mapv
       (fn [x]
         (let [rider (if (< 0.25 (rand))
                       (make-human)
                       (clone! :empty-seat))]
           (position! rider [x 0 -0.31])
           (rotate! rider [0 180 0])
-          (parent! rider kart))) 
+          (parent! rider kart)))
       [0.5 -0.5])
     kart))
 
@@ -85,8 +84,8 @@
         len (count positions)
         points positions]
         (set! (.name holder) "scaffold")
-      (reduce 
-        (fn [a b] 
+      (reduce
+        (fn [a b]
 
           (let [lowest (if (< (Y a) (Y b)) a b)
                 rot (look-quat [(X b) 0 (Z b)][(X a) 0 (Z a)])
@@ -103,18 +102,13 @@
         points)))
 
 (defn make-train [_]
+  (dorun (for [z (range 20)] (position! (make-kart) [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
   (let [hook (.AddComponent (clone! :rock_5) hooks.OnDrawGizmosHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "draw-gizmos"))
-  (let [camera (object-named "Camera")
-        rider (rand-nth (objects-named "kartainer2"))]
-    (when (and camera rider)
-      (parent! camera rider)
-      (rotation! camera [0 180 0])
-      (set! (.localPosition (.transform camera)) (->v3 [0 4 0]))))
   (start-quease!))
 
 (defn update-test [_]
