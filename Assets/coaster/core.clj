@@ -11,7 +11,9 @@
     math.spline
     human.core
     coaster.world)
-  (:import [UnityEngine Time]))
+  (:import [UnityEngine Time])
+  (:require [spice.core :refer [start-quease!]])
+  (:import [UnityEngine Time Debug]))
 
 (def track-grow-rate 30) ;; grow track every n frames
 (def track-grow-size 100) ;; add n nodes every track growth
@@ -65,10 +67,6 @@
   (reset! track-normals (vec (repeatedly n #(->v3 [0 1 0]))))
   true))
 
-
-
-
-
 (defn make-kart []
   (let [kart (clone! :cart)]
     (mapv 
@@ -103,15 +101,21 @@
                     (parent! o holder)))))
             b))
         points)))
- 
+
 (defn make-train [_]
-  (dorun (for [z (range 20)] (position! (make-kart) [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
   (let [hook (.AddComponent (clone! :rock_5) hooks.OnDrawGizmosHook)]
     (set! (.namespaceName hook) "coaster.core")
-    (set! (.varName hook) "draw-gizmos")))
+    (set! (.varName hook) "draw-gizmos"))
+  (let [camera (object-named "Camera")
+        rider (rand-nth (objects-named "kartainer2"))]
+    (when (and camera rider)
+      (parent! camera rider)
+      (rotation! camera [0 180 0])
+      (set! (.localPosition (.transform camera)) (->v3 [0 4 0]))))
+  (start-quease!))
 
 (defn update-test [_]
   (swap! T + Time/deltaTime)
@@ -123,7 +127,7 @@
         (look-at! (->transform rider) (V+ next-pos (->v3 [0 5 0]))))) 
     (arcadia.core/objects-named "cart") ))
    (comment (mapv (comp #(force! %  (- (rand 100) 50) 0 0 ) ->rigidbody) 
-      (arcadia.core/objects-named "hand.R"))) 
+      (objects-named "hand.R"))) 
   (look-at! (->transform (the Camera)) (->v3 (the cart))))
 
 (defn draw-whole-track [go]

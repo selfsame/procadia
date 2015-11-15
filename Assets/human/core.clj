@@ -75,11 +75,6 @@
     (cross-fade o (str (srand-nth emotions)) 1.0)
     ragdoll )))
 
-
-
-
-
-
 (comment 
 
 (do 
