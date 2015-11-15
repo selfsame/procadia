@@ -26,12 +26,9 @@
 (defn sin [n] (Mathf/Sin n))
 (defn tan [n] (Mathf/Tan n))
 
-(defn generate-skydome
-  ([seed]
-    (seed! seed)
-    (generate-skydome))
-  ([]
-    (let [skydome (clone! :skydome)
+
+(defn gradiate [o] 
+  (let [skydome o
           [c1 c2 c3 c4 c5 c6] (mapv color (sort #(< (first %1) (first %2)) (repeatedly 6 #(rand-vec [0.2 0.9] [0.1 0.8] [0.2 0.7]))))
           [m1 m2 m3] (vec (shuffle [(srand 30)(srand 24)(srand 13)]))]
       (vertex-colors! skydome 
@@ -41,7 +38,13 @@
               (Color/Lerp c6 c3 (sin (* y m3)))
               (cos (* x m2)))
             (cos (* z m1)))))
-      skydome)))
+      o))
+
+(defn generate-skydome
+  ([seed]
+    (seed! seed)
+    (generate-skydome))
+  ([] (gradiate (clone! :skydome))))
 
 (defn generate-world
   ([seed]
