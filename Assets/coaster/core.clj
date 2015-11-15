@@ -13,7 +13,7 @@
     coaster.world)
   (:import [UnityEngine Time]))
 
-(def track-grow-rate 100) ;; grow track every n frames
+(def track-grow-rate 30) ;; grow track every n frames
 (def track-grow-size 100) ;; add n nodes every track growth
 
 (def speed 1.5)
@@ -28,15 +28,17 @@
 (def track-normals (atom []))
 
 (defn next-track-point [i]
-  (let [j (- 150 (* 50 (Mathf/Sin (* i 0.2))))
-        x (if (< i 100) 
-            (* j (Mathf/Cos (* i 0.1)) )
-            (* j (Mathf/Cos (* i 0.1)) ))
-        res (->v3 (+ i x) (+ 50 (* 60 (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
-                  (+ i (* j (Mathf/Sin (* i 0.13))))
+  (let [i* (* i 0.01)
+        j (- 150 (* i 0.1 (Mathf/Sin (* i 0.2))))
+        x (* j (* 0.1 i*) (Mathf/Cos (* i 0.1)) )
+        res (->v3 (+ i x)
+                  (+ 50 (* 10 i* (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
+                  (+ i (* j (Mathf/Sin (* i* 0.13))))
                   )]
-    (V+ res (->v3 0 (+ (* (+ (Mathf/Abs (Z res)) (Mathf/Abs (X res))) 0.3 )
-                       (* (noise :terrain (V* res 0.003)) (+ 200 ))) 0))))
+    (V+ res (->v3 0
+                  (+ (* (+ (Z res) (X res)) 0.3)
+                     (* (noise :terrain (V* res 0.003)) (+ 200 )))
+                  0))))
 (defn gen-track [n]
   (let [data
     (vec (for [i (range 1 (+ n 1))
@@ -62,7 +64,9 @@
   (let [kart (clone! :cart)]
     (mapv 
       (fn [x]
-        (let [rider (make-human)]
+        (let [rider (if (< 0.25 (rand))
+                      (make-human)
+                      (clone! :empty-seat))]
           (position! rider [x 0 -0.31])
           (rotate! rider [0 180 0])
           (parent! rider kart))) 
@@ -70,12 +74,9 @@
     kart))
 
 (defn gen-scaffold [positions]
-  (let [holder (clone! :Sphere)
-        interval 0.5
+  (let [holder (clone! :Sphere (->v3 [0 0 0]))
         len (count positions)
-        points 
-        (for [i (range 4 len)]
-          (spline (* i interval) positions))]
+        points positions]
         (set! (.name holder) "scaffold")
       (reduce 
         (fn [a b] 
@@ -109,13 +110,17 @@
     (fn [i rider]
       (let [pos (spline (+ (* @T speed) (* i interval)) @track-positions)
             next-pos (spline (+ (* @T speed) (* i interval) interval)  @track-positions)]
-        (position! rider pos)
-        (look-at! (->transform rider) next-pos))) 
+        (position! rider (V+ pos (->v3 [0 5 0])))
+        (look-at! (->transform rider) (V+ next-pos (->v3 [0 5 0]))))) 
     (arcadia.core/objects-named "cart") ))
    (comment (mapv (comp #(force! %  (- (rand 100) 50) 0 0 ) ->rigidbody) 
       (arcadia.core/objects-named "hand.R"))) 
   (look-at! (->transform (the Camera)) (->v3 (the cart)))
   (draw-terrain (->v3 (the Camera))))
+
+(defn draw-whole-track [go]
+  (doseq [[a b] (partition 2 1 @track-positions)]
+    (Gizmos/DrawLine a b)))
 
 (defn draw-gizmos [_]
   (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals)))
@@ -137,13 +142,17 @@
   (grow-track! 100)
   (make-train nil)
 
-  (let [seat (last (shuffle (arcadia.core/objects-named "head")))]
-    (position! (the Camera)  (v+ (->v3 seat) [0.5 7 0]))
+  (let [seat (last (shuffle (arcadia.core/objects-named "empty-seat")))]
+    (position! (the Camera)  (v+ (->v3 seat) [0 1.2 0]))
     (parent! (the Camera) seat)
     (look-at! (->transform (the Camera)) (->v3 (the cart)))
     (sel! (the Camera))))
 
-(setup-game)
+(defn test-scene [go]
+  (setup-game))
+
+(comment
+  (setup-game))
 
 (defn track-grower [go]
   (if (zero? (mod Time/frameCount track-grow-rate))
