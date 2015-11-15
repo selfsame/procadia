@@ -54,15 +54,6 @@
   (reset! track-normals (vec (repeatedly n #(->v3 [0 1 0]))))
   true))
 
-(defn gridder [n]
-  (let [data
-    (vec (for [x (range n) 
-               z (range n)]
-      (->v3 x (* (noise :terrain (* x 0.04) 0.0 (* z 0.04))  20) z)))]
-  (reset! track-positions data)
-  (reset! track-normals (vec (repeatedly n #(->v3 [0 1 0]))))
-  true))
-
 
 
 
@@ -123,12 +114,13 @@
     (arcadia.core/objects-named "cart") ))
    (comment (mapv (comp #(force! %  (- (rand 100) 50) 0 0 ) ->rigidbody) 
       (arcadia.core/objects-named "hand.R"))) 
-  (look-at! (->transform (the Camera)) (->v3 (the cart))))
+  (look-at! (->transform (the Camera)) (->v3 (the cart)))
+  (draw-terrain (->v3 (the Camera))))
 
 (defn draw-gizmos [_]
-  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals))
+  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals)))
   (set! Gizmos/color (color 1 0 1))
-    (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) (->v3 0))) @track-positions))))
+    (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) (->v3 0))) @track-positions)))
 
 
 (defn grow-track! [n]
@@ -157,20 +149,3 @@
   (if (zero? (mod Time/frameCount track-grow-rate))
     (grow-track! track-grow-size)))
  
-(do 
-(set! (.name (clone! :Sphere)) "Terrain")
-(dorun (for [x (range -5 5) z (range -5 5)]
-  (let [tile (clone! :tile (v* [x 0 z] 100))]
-
-(parent! tile (the Terrain))
-(map-mesh-set! tile 
-  (fn [i v] 
-    (->v3 (X v) 
-          (* (noise :terrain (V* (V+ v 
-            (->v3 (v* [x 0 z] 10)))
-             0.1)) 70) 
-          (Z v))))
-(gradiate tile)
-))) 
-(local-scale! (the Terrain) [5 1 5])
-true)
