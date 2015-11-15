@@ -19,9 +19,10 @@
 
 (def T (atom 0))
 
-(def TRACK (atom [[] []]))
+; (def TRACK (atom [[] []]))
 
-
+(def track-positions (atom []))
+(def track-normals (atom []))
 
 (defn gen-track [n]
   (let [data
@@ -36,7 +37,8 @@
           )]]
     (V+ res (->v3 0 (+ (* (+ (Mathf/Abs (Z res)) (Mathf/Abs (X res))) 0.3 )
                        (* (noise :terrain (V* res 0.003)) (+ 200 ))) 0))))]
-  (reset! TRACK [data (vec (repeatedly n #(->v3 [0 1 0])))])
+  (reset! track-positions data)
+  (reset! track-normals (vec (repeatedly n #(->v3 [0 1 0]))))
   true))
 
 (defn gridder [n]
@@ -44,7 +46,8 @@
     (vec (for [x (range n) 
                z (range n)]
       (->v3 x (* (noise :terrain (* x 0.04) 0.0 (* z 0.04))  20) z)))]
-  (reset! TRACK [data (vec (repeatedly n #(->v3 [0 1 0])))])
+  (reset! track-positions data)
+  (reset! track-normals (vec (repeatedly n #(->v3 [0 1 0]))))
   true))
 
 
@@ -69,7 +72,7 @@
         len 200
         points 
         (for [i (range 4 len)]
-          (spline (* i interval) (first @TRACK)))]
+          (spline (* i interval) @track-positions))]
         (set! (.name holder) "scaffold")
       (reduce 
         (fn [a b] 
@@ -101,8 +104,8 @@
   (swap! T + Time/deltaTime)
   (vec (map-indexed
     (fn [i rider]
-      (let [pos (spline (+ (* @T speed) (* i interval)) (first @TRACK))
-            next-pos (spline (+ (* @T speed) (* i interval) interval)  (first @TRACK))]
+      (let [pos (spline (+ (* @T speed) (* i interval)) @track-positions)
+            next-pos (spline (+ (* @T speed) (* i interval) interval)  @track-positions)]
         (position! rider pos)
         (look-at! (->transform rider) next-pos))) 
     (arcadia.core/objects-named "cart") ))
@@ -111,9 +114,9 @@
   (look-at! (->transform (the Camera)) (->v3 (the cart))))
 
 (defn draw-gizmos [_]
-  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @TRACK))
+  (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals))
   (set! Gizmos/color (color 1 0 1))
-    (dorun (map-indexed #(Gizmos/DrawLine %2 (get (first @TRACK) (inc %1) (->v3 0))) (first @TRACK)))))
+    (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) (->v3 0))) @track-positions))))
 
 
 (defn setup-game []
