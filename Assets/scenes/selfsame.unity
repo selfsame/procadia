@@ -87,48 +87,6 @@ NavMeshSettings:
 --- !u!127 &5
 LevelGameManager:
   m_ObjectHideFlags: 0
---- !u!1001 &253339053
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -99999
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 408528, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: b7b1c21311736554382dd07fc4f88dc9, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1232364995
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,48 +223,6 @@ MonoBehaviour:
   namespaceName: coaster.core
   varName: draw-whole-track
   _serialized_data: 
---- !u!1001 &2001646264
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -99999
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 455002, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: c8700a7dd9621b54981301d5715cd9f4, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &2114586857
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,7 +272,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
-  m_StereoMirrorMode: 0
 --- !u!4 &2114586859
 Transform:
   m_ObjectHideFlags: 0

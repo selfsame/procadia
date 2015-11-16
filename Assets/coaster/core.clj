@@ -97,6 +97,13 @@
                     ))))
             b))
         points)))
+
+(defn grow-track! [n]
+  (let [old-size (count @track-positions)]
+    (dotimes [i n]
+      (swap! track-positions conj (next-track-point (+ old-size i)))
+      (swap! track-normals conj (->v3 [0 1 0])))
+    (gen-scaffold (take n (drop old-size @track-positions)))))
  
 (defn make-train [_]
   (dorun (for [z (range 4)] (position! (make-kart) [0 0 (* z 5)])))
@@ -136,14 +143,6 @@
   (set! Gizmos/color (color 1 0 1))
     (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) %2)) @track-positions)))
 
-
-(defn grow-track! [n]
-  (let [old-size (count @track-positions)]
-    (dotimes [i n]
-      (swap! track-positions conj (next-track-point (+ old-size i)))
-      (swap! track-normals conj (->v3 [0 1 0])))
-    (gen-scaffold (take n (drop old-size @track-positions)))))
-
 (defn setup-game []
   (clear-cloned!)
   (clone! :Camera)
@@ -167,9 +166,10 @@
   (setup-game))
 
 
-(setup-game)
 
 (defn track-grower [go]
 )
- 
-(grow-track! 2)
+
+(comment
+  (setup-game)
+  (grow-track! 2))
