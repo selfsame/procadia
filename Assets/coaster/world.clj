@@ -1,11 +1,9 @@
 (ns coaster.world
   (:use 
       arcadia.core 
-      arcadia.hydrate
       seed.core
       hard.core
       hard.animation
-      hard.edit
       hard.mesh
       math.spline
       seed.core)
@@ -15,6 +13,15 @@
 
 (def FREE-TILES (atom []))
 (def USED-TILES (atom {}))
+(def VIEW-POINT (atom nil))
+
+(def COLORS (atom (vec (repeatedly 6 #(rand-vec [0.2 0.9] [0.1 0.8] [0.2 0.7])))))
+
+(def tile-size 200)
+
+(def tile-offsets
+  [[-4 -2] [-4 -1] [-4 0] [-4 1] [-4 2] [-3 -3] [-3 -2] [-3 -1] [-3 0] [-3 1] [-3 2] [-3 3] [-2 -4] [-2 -3] [-2 -2] [-2 -1] [-2 0] [-2 1] [-2 2] [-2 3][-2 4] [-1 -4] [-1 -3] [-1 -2] [-1 -1] [-1 0] [-1 1] [-1 2] [-1 3] [-1 4] [0 -4] [0 -3] [0 -2] [0 -1] [0 0] [0 1] [0 2] [0 3] [0 4] [1 -4][1 -3] [1 -2] [1 -1] [1 0] [1 1] [1 2] [1 3] [1 4] [2 -4] [2 -3] [2 -2] [2 -1] [2 0] [2 1] [2 2] [2 3] [2 4] [3 -3] [3 -2] [3 -1][3 0] [3 1] [3 2] [3 3] [4 -2] [4 -1] [4 0] [4 1] [4 2]])
+
 
 (defn noise 
   ([k v] (cond (vector3? v) (noise k (.x v) (.y v) (.z v))
@@ -49,53 +56,60 @@
     (generate-skydome))
   ([] (gradiate (clone! :skydome))))
 
+
+(defn draw-tile [o pos]
+  (position! o pos)
+  (map-mesh-set! o 
+  (fn [i v] 
+    (->v3 (X v) 
+          (* (noise :terrain 
+            (* (+ (* (X v) 20)(X pos)) 0.004) 
+            0 
+            (* (+ (* (Z v) 20)(Z pos)) 0.004)) 10) 
+          (Z v))))
+  (hill-color o
+    (fn [i normal] (color (->vec  (v*  (->v3 (apply v+ (mapv #(v* %2 %1)   (v* normal [1 1 1]) @COLORS))) 0.333))))))
+
+(defn draw-terrain [point]
+  (let [point [(int (/ (X point) tile-size))(int (/ (Z point) tile-size))]]
+    (when (not= @VIEW-POINT point)
+      (reset! VIEW-POINT point)
+      (let [in-view (mapv (fn [[x y]] [(+ x (first point)) (+ y (last point))]) tile-offsets)
+            unused 
+              (filterv 
+              #(> (Vector2/Distance 
+                (Vector2. (first %) (last %)) 
+                (Vector2. (first point) (last point))) 5.0) 
+          (keys @USED-TILES))]
+        (swap! FREE-TILES (fn [col] (concat col (vals (select-keys @USED-TILES unused)))))
+        
+        (mapv 
+          (fn [point]
+            (if-not (get @USED-TILES point)
+              (when-let [tile (first @FREE-TILES)]
+                (swap! FREE-TILES rest)
+                (draw-tile tile (->v3 (v* [(first point) 0 (last point)] tile-size)))
+                (swap! USED-TILES #(assoc %  point tile)))))
+          in-view)
+        (swap! USED-TILES (fn [col] (apply dissoc col unused)))
+        true
+        ))))
+
+
 (defn generate-world
   ([seed]
     (seed! seed)
     (generate-world))
   ([]
+    (reset! COLORS (vec (repeatedly 6 #(rand-vec [0.3 0.9] [0.4 0.9] [0.4 0.9]))))
+    (reset! VIEW-POINT nil)
+    (reset! USED-TILES {})
     (reset! PN {:terrain (PerlinNoise. (srand))}) 
     (let [terrain (clone! :Terrain)
-          tiles (mapv #(parent! (clone! :tile [0 (+ -99999 %) 0]) terrain) (range 100))]
+          tiles (mapv #(let [o (clone! :grid [0 (+ -99999 %) 0])] (parent! o terrain) o) (range 100))]
       (local-scale! (generate-skydome) (->v3 90000 90000 90000))
+      (reset! FREE-TILES tiles)
       
-      )))
+      true)
+    (draw-terrain (->v3 0 0 0))))
 
-
-(defn draw-terrain [point]
-  (let [tiles (children (the Terrain))
-        outer (remove #(< (Vector3/Distance (->v3 %) point) 4000.0) tiles)
-    ]
-    (mapv #(position! % [0 -10000 0]) outer)))
-
-
-
-
-
-
-
-
-(comment 
-
-
-(do (clear-cloned!)
-(generate-world))
-
-(draw-terrain (->v3 0 0 0))
-
-
-
-(map-mesh-set! tile 
-  (fn [i v] 
-    (->v3 (X v) 
-          (* (noise :terrain (V* (V+ v 
-            (->v3 (v* [x 0 z] 10)))
-             0.1)) 70) 
-          (Z v))))
-
-
-
-
-
-
-  )

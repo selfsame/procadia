@@ -142,6 +142,10 @@ Material:
         second: .5
       data:
         first:
+          name: _Shininess
+        second: .699999988
+      data:
+        first:
           name: _Exposure
         second: 1
       data:
@@ -201,6 +205,10 @@ Material:
         first:
           name: _SpecColor
         second: {r: .200000003, g: .200000003, b: .200000003, a: 1}
+      data:
+        first:
+          name: _Emission
+        second: {r: 0, g: 0, b: 0, a: 0}
       data:
         first:
           name: _Tint

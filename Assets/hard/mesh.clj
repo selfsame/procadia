@@ -37,22 +37,16 @@
 (defn yfade [c1 c2]
   (fn [x y z i] (Color/Lerp c1 c2 y)))
 
-
 (defn map-mesh-set! [o f]
   (let [mf (component o UnityEngine.MeshFilter)
         vs (.. mf mesh vertices)]
     (set! (.vertices (.mesh mf)) 
      (into-array (vec (for [i (range (count vs))] (f i (get (.vertices (.mesh mf)) i))))))
     (.RecalculateNormals (.mesh mf))
-  true
-))
-
-
+  true))
 
 (defn hill-color [o f]
-  (let [mf (component o UnityEngine.MeshFilter)
-        vs (.. mf mesh vertices)]
+  (let [mf (component o UnityEngine.MeshFilter)]
     (set! (.colors (.mesh mf)) 
-     (into-array (vec (for [i (range (count vs))] (f i (get (.normals (.mesh mf)) i))))))
-  true
-))
+     (into-array (vec (for [i (range (count (.colors (.mesh mf))))] (f i (get (.normals (.mesh mf)) i))))))
+  true))
