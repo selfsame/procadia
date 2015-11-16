@@ -13,16 +13,16 @@
     coaster.world)
   (:import [UnityEngine Time]))
 
-(def track-grow-rate 30) ;; grow track every n frames
-(def track-grow-size 100) ;; add n nodes every track growth
+(def buffer 50)
 
-(def speed 1.5)
+(def speed 2)
 
 (def interval 0.16)
 
 (def T (atom 0))
 
-; (def TRACK (atom [[] []]))
+
+(def SCAFFOLDS (atom '()))
 
 (def track-positions (atom []))
 (def track-normals (atom []))
@@ -66,7 +66,7 @@
       (fn [x]
         (let [rider (if (< 0.25 (rand))
                       (make-human)
-                      (clone! :empty-seat))]
+                      (GameObject. "empty-seat"))]
           (position! rider [x 0 -0.31])
           (rotate! rider [0 180 0])
           (parent! rider kart))) 
@@ -74,10 +74,8 @@
     kart))
 
 (defn gen-scaffold [positions]
-  (let [holder (clone! :Sphere (->v3 [0 0 0]))
-        len (count positions)
+  (let [len (count positions)
         points positions]
-        (set! (.name holder) "scaffold")
       (reduce 
         (fn [a b] 
 
@@ -85,18 +83,20 @@
                 rot (look-quat [(X b) 0 (Z b)][(X a) 0 (Z a)])
                 dist (Vector3/Distance (->v3 (X a) 0 (Z a)) (->v3 (X b) 0 (Z b)))]
 
-            (doseq [i (take (+ 2 (srand 6)) (range (int (/ (Y lowest) dist))))]
+            (doseq [i (take (+ 2 (srand 12)) (range (int (/ (+ (Y lowest) 10.0) dist))))]
               (let [target (v- [(X a)(Y lowest)(Z a)] [0 (* i dist) 0])]
                 (when (or (= i 0) (< 0 (noise :scaffold (->v3 (v* target 0.01)))))
-                  (let [o (clone! (get {0 :girder} i :girder2) target)]
+                  (when-let [o (last @SCAFFOLDS)]
+                    (position! o target)
+                    (reset! SCAFFOLDS (cons o (butlast @SCAFFOLDS)))
                     (local-scale! o (->v3 (/ dist 10) (/ dist 10) (/ dist 10)))
                     (set! (.rotation (.transform o)) rot)
-                    (parent! o holder)))))
+                    ))))
             b))
         points)))
  
 (defn make-train [_]
-  (dorun (for [z (range 20)] (position! (make-kart) [0 0 (* z 5)])))
+  (dorun (for [z (range 4)] (position! (make-kart) [0 0 (* z 5)])))
   (let [hook (.AddComponent (clone! :rock_5) hooks.UpdateHook)]
     (set! (.namespaceName hook) "coaster.core")
     (set! (.varName hook) "update-test"))
@@ -106,9 +106,13 @@
 
 (defn update-test [_]
   (swap! T + Time/deltaTime)
+    (let [underage (-  (+ buffer (int (* @T speed))) (count @track-positions))]
+    (when (> underage 4) 
+      (grow-track! underage)
+      ))
   (vec (map-indexed
     (fn [i rider]
-      (let [pos (spline (+ (* @T speed) (* i interval)) @track-positions)
+      (let [pos (spline (+ (/ @T speed) (* i interval)) @track-positions)
             next-pos (spline (+ (* @T speed) (* i interval) interval)  @track-positions)]
         (position! rider (V+ pos (->v3 [0 5 0])))
         (look-at! (->transform rider) (V+ next-pos (->v3 [0 5 0]))))) 
@@ -125,7 +129,7 @@
 (defn draw-gizmos [_]
   (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals)))
   (set! Gizmos/color (color 1 0 1))
-    (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) (->v3 0))) @track-positions)))
+    (dorun (map-indexed #(Gizmos/DrawLine %2 (get @track-positions (inc %1) %2)) @track-positions)))
 
 
 (defn grow-track! [n]
@@ -139,8 +143,14 @@
   (clear-cloned!)
   (clone! :Camera)
   (generate-world (rand))
-  (grow-track! 100)
+  (grow-track! buffer)
   (make-train nil)
+
+  (set! (.name (clone! :Sphere (->v3 [0 0 0]))) "scaffold")
+  (reset! SCAFFOLDS
+    (vec (for [i (range 800)] 
+      (let [o (clone! :girder)] 
+        (parent! o (the scaffold)) o))))
 
   (let [seat (last (shuffle (arcadia.core/objects-named "empty-seat")))]
     (position! (the Camera)  (v+ (->v3 seat) [0 1.2 0]))
@@ -151,10 +161,10 @@
 (defn test-scene [go]
   (setup-game))
 
-(comment
-  (setup-game))
+
+(setup-game)
 
 (defn track-grower [go]
-  (if (zero? (mod Time/frameCount track-grow-rate))
-    (grow-track! track-grow-size)))
+)
  
+(grow-track! 2)

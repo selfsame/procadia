@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: VERTEX
-  m_Shader: {fileID: 4800000, guid: d01b08e2286a88d4bbb7958ad0e6154c, type: 3}
+  m_Shader: {fileID: 4800000, guid: 9059757e6e479e744b36b38fe9795c5a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
@@ -150,7 +150,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .448529422, g: .214370668, b: .214370668, a: 0}
+        second: {r: 1, g: 1, b: 1, a: 0}
       data:
         first:
           name: _SpecColor

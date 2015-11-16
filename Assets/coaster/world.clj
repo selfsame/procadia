@@ -1,11 +1,9 @@
 (ns coaster.world
   (:use 
       arcadia.core 
-      arcadia.hydrate
       seed.core
       hard.core
       hard.animation
-      hard.edit
       hard.mesh
       math.spline
       seed.core)
@@ -16,6 +14,8 @@
 (def FREE-TILES (atom []))
 (def USED-TILES (atom {}))
 (def VIEW-POINT (atom nil))
+
+(def COLORS (atom (vec (repeatedly 6 #(rand-vec [0.2 0.9] [0.1 0.8] [0.2 0.7])))))
 
 (def tile-size 200)
 
@@ -56,21 +56,6 @@
     (generate-skydome))
   ([] (gradiate (clone! :skydome))))
 
-(defn generate-world
-  ([seed]
-    (seed! seed)
-    (generate-world))
-  ([]
-    (reset! VIEW-POINT nil)
-    (reset! USED-TILES {})
-    (reset! PN {:terrain (PerlinNoise. (srand))}) 
-    (let [terrain (clone! :Terrain)
-          tiles (mapv #(let [o (clone! :tile [0 (+ -99999 %) 0])] (parent! o terrain) o) (range 100))]
-      (local-scale! (generate-skydome) (->v3 90000 90000 90000))
-      (reset! FREE-TILES tiles)
-      
-      true)))
-
 
 (defn draw-tile [o pos]
   (position! o pos)
@@ -81,7 +66,9 @@
             (* (+ (* (X v) 20)(X pos)) 0.004) 
             0 
             (* (+ (* (Z v) 20)(Z pos)) 0.004)) 10) 
-          (Z v)))))
+          (Z v))))
+  (hill-color o
+    (fn [i normal] (color (->vec  (v*  (->v3 (apply v+ (mapv #(v* %2 %1)   (v* normal [1 1 1]) @COLORS))) 0.333))))))
 
 (defn draw-terrain [point]
   (let [point [(int (/ (X point) tile-size))(int (/ (Z point) tile-size))]]
@@ -108,13 +95,21 @@
         true
         ))))
 
-(comment 
-  (use 'hard.life)
-  (clear-cloned!)
-  (generate-world)
-  (route-update (clone! :Camera)
-    (fn [c]
-      (draw-terrain (->v3 (->go c))))))
 
-
+(defn generate-world
+  ([seed]
+    (seed! seed)
+    (generate-world))
+  ([]
+    (reset! COLORS (vec (repeatedly 6 #(rand-vec [0.3 0.9] [0.4 0.9] [0.4 0.9]))))
+    (reset! VIEW-POINT nil)
+    (reset! USED-TILES {})
+    (reset! PN {:terrain (PerlinNoise. (srand))}) 
+    (let [terrain (clone! :Terrain)
+          tiles (mapv #(let [o (clone! :grid [0 (+ -99999 %) 0])] (parent! o terrain) o) (range 100))]
+      (local-scale! (generate-skydome) (->v3 90000 90000 90000))
+      (reset! FREE-TILES tiles)
+      
+      true)
+    (draw-terrain (->v3 0 0 0))))
 
