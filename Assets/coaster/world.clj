@@ -3,7 +3,6 @@
       arcadia.core 
       seed.core
       hard.core
-      hard.animation
       hard.mesh
       math.spline
       seed.core)
@@ -56,6 +55,11 @@
     (generate-skydome))
   ([] (gradiate (clone! :skydome))))
 
+(defn terrain-height [x z]
+  (* (noise :terrain 
+            (* x 0.004) 
+            0 
+            (* z 0.004)) 200))
 
 (defn draw-tile [o pos]
   (position! o pos)

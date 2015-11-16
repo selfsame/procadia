@@ -1,20 +1,18 @@
 (ns human.core
   (:use 
   arcadia.core 
-  arcadia.hydrate
   hard.core
   hard.animation
-  hard.edit
   hard.mesh
   hard.physics
-  math.spline
   seed.core
   human.data)
   (:import [UnityEngine]))
 
 (defn rig [o] 
-  (reveal-bones o)
-  (form-colliders o))
+  ;(reveal-bones o)
+  ;(form-colliders o)
+  )
 
 (defn ->skinned [o]
   (->comp (->go o) UnityEngine.SkinnedMeshRenderer))

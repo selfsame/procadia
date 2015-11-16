@@ -1,5 +1,5 @@
 (ns hard.animation
- (:use arcadia.core hard.core arcadia.hydrate
+ (:use arcadia.core hard.core
   hard.physics)
   (:import [UnityEngine]))
 
@@ -49,6 +49,8 @@
 
 (defn ->bone [o] (->comp (->go o) "hard.animation.Bone"))
 
+(comment 
+
 (defn reveal-bones [o]
 	(let [nexts (children o)]
 		(let [gob (->go o)
@@ -83,7 +85,7 @@
         })
       
     (mapv form-colliders 
-      (filter ->bone (children nex)))))
+      (filter ->bone (children nex))))))
 
 
 
