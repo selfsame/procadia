@@ -234,6 +234,7 @@ GameObject:
   - 4: {fileID: 1995342197}
   - 114: {fileID: 1995342198}
   - 114: {fileID: 1995342199}
+  - 114: {fileID: 1995342200}
   m_Layer: 0
   m_Name: rockscene
   m_TagString: Untagged
@@ -284,6 +285,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   namespaceName: coaster.core
   varName: track-grower
+  _serialized_data: 
+--- !u!114 &1995342200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1995342196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1172745832, guid: 18c0e9797d0f44e49b053ce42136b990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  namespaceName: coaster.core
+  varName: draw-whole-track
   _serialized_data: 
 --- !u!1 &2114586857
 GameObject:

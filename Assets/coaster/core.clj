@@ -29,11 +29,14 @@
 
 (defn next-track-point [i]
   (let [i* (* i 0.01)
-        j (- 150 (* i 0.1 (Mathf/Sin (* i 0.2))))
-        x (* j (* 0.1 i*) (Mathf/Cos (* i 0.1)) )
-        res (->v3 (+ i x)
-                  (+ 50 (* 10 i* (Mathf/Sin (* i 0.5)) (Mathf/Sin (* i 0.025)) )) 
-                  (+ i (* j (Mathf/Sin (* i* 0.13))))
+        radius (+ 150 i*)
+        j (* radius (Mathf/Sin (* i 0.2)))
+        x (* (* 0.01 j) radius (Mathf/Cos (* i 0.1)) )
+        res (->v3 (+ x (* radius (Mathf/Cos (* i* i* 3))))
+                  (+ 50 (* radius
+                           (Mathf/Sin (* i 0.5))
+                           (Mathf/Sin (* i 0.025)) )) 
+                  (+ i (* radius (Mathf/Sin (* i* 2))))
                   )]
     (V+ res (->v3 0
                   (+ (* (+ (Z res) (X res)) 0.3)
@@ -128,7 +131,9 @@
 
 (defn draw-whole-track [go]
   (doseq [[a b] (partition 2 1 @track-positions)]
-    (Gizmos/DrawLine a b)))
+    (Gizmos/DrawSphere a 1)
+    (Gizmos/DrawLine a b)
+    ))
 
 (defn draw-gizmos [_]
   (comment (apply on-draw-gizmos (mapv #(take 2 (drop (int (* @T speed)) %)) @track-positions @track-normals))
